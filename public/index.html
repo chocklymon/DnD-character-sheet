@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="CharSheet">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>D&amp;D 5e Character Sheet</title>
+    <link rel="stylesheet" type="text/css" href="js/vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/sheet.css">
+</head>
+<body>
+<div class="container character-sheet" data-ng-controller="Main">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="header">
+                <input type="text" ng-model="characterName">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-1 attributes">
+            <div class="attribute-container" data-ng-repeat="(name, ability) in abilities">
+                <label for="{{name}}">{{ability.name}}</label>
+                <input type="text" class="sheet-attribute" title="{{ability.name}} Modifier"
+                       ng-model="ability.mod"
+                       ng-readonly="!mode.editAll">
+                <div class="attribute">
+                    <input id="{{name}}" type="text" ng-model="ability.score" ng-change="updateModifier(name)">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="inspiration-container">
+                <div class="sheet-value">
+                    <input type="checkbox" ng-model="hasInspiration">
+                </div>
+                <div class="sheet-label">
+                    <span>Inspiration</span>
+                </div>
+            </div>
+            <div class="proficiency-container">
+                <div class="sheet-value">
+                    <input type="text" ng-model="proficiencyBonus" ng-change="updateProficiencies()">
+                </div>
+                <div class="sheet-label">
+                    <span>Proficiency Bonus</span>
+                </div>
+            </div>
+            <div class="section score-list">
+                <div class="saving-throw" data-ng-repeat="savingThrow in savingThrows">
+                    <input type="checkbox" ng-model="savingThrow.proficient" ng-change="updateSavingThrow(savingThrow)">
+                    <input type="text" title="{{savingThrow.ability.name}} Saving Throw Bonus"
+                           ng-model="savingThrow.score"
+                           ng-readonly="!mode.editAll">
+                    <span>{{savingThrow.ability.name}}</span>
+                </div>
+                <div class="sheet-label">
+                    <span>Saving Throws</span>
+                </div>
+            </div>
+            <div class="section score-list">
+                <div class="skill" data-ng-repeat="skill in skills">
+                    <input type="checkbox" ng-model="skill.proficient" ng-change="updateSkillBonus(skill)">
+                    <input type="text" title="{{skill.name}} Bonus"
+                           ng-model="skill.score"
+                           ng-readonly="!mode.editAll">
+                    <span>{{skill.name}}</span>
+                    <span class="text-muted">({{skill.ability}})</span>
+                </div>
+                <div class="sheet-label">
+                    <span>Skills</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript" src="js/vendor/angular/angular.min.js"></script>
+<script type="application/javascript" src="js/app.js"></script>
+</body>
+</html>

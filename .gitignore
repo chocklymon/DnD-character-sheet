@@ -1,0 +1,14 @@
+# Dependency Managed Files
+public/js/vendor
+node_modules
+
+# IDE/Editor Files
+nbproject/
+.idea/
+
+# Misc Files
+*.log
+*.tar.gz
+*.zip
+Thumbs.db
+.DS_Store
