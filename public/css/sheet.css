@@ -7,6 +7,11 @@
     background: transparent;
 }
 
+.header hr {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
 .sheet-value {
     background-color: white;
     border: 1px solid #666;
@@ -33,7 +38,7 @@
     vertical-align: top;
     width: 137px;
 }
-.sheet-label span {
+.sheet-label span, .sheet-label label {
     display: block;
     font-weight: bold;
     font-size: 11px;
@@ -48,14 +53,20 @@
     text-align: center;
 }
 
-.section {
-    border: 1px solid #666;
+.section, .outer-section {
     border-radius: 5px;
     margin-bottom: 10px;
 }
-.section .sheet-label {
+.section {
+    border: 1px solid #666;
+}
+.section .sheet-label, .outer-section .sheet-label {
     border: none;
     width: 100%;
+}
+.outer-section {
+    background-color: #f9f9f9;
+    padding: 4px;
 }
 
 .attribute-container {

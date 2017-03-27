@@ -1,3 +1,3 @@
 
-require('./character');
 require('./user');
+require('./character');

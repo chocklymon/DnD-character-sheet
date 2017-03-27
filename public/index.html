@@ -9,58 +9,119 @@
     <link rel="stylesheet" type="text/css" href="css/sheet.css">
 </head>
 <body>
-<div class="container character-sheet" data-ng-controller="Main">
+<div class="container character-sheet" data-ng-controller="Main as vm">
+    <form class="form-horizontal" name="vm.characterForm" ng-submit="vm.save()">
     <div class="row">
         <div class="col-xs-12">
-            <div class="header">
-                <input type="text" ng-model="characterName">
+            <div class="row header">
+                <div class="col-md-5 character-name">
+                    <input type="text" id="characterName" ng-model="vm.character.name">
+                    <label for="characterName">Character Name</label>
+                </div>
+                <div class="col-md-7 character-info">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <input type="text" id="characterClass" ng-model="vm.character.class">
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" id="characterBackground" ng-model="vm.character.background">
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" id="playerName" ng-model="vm.character.playerName">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label for="characterClass">Class &amp; Level</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label for="characterBackground">Background</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label for="playerName">Player Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <input type="text" id="characterRace" ng-model="vm.character.race">
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" id="characterAlignment" ng-model="vm.character.alignment">
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" id="experiencePoints" ng-model="vm.character.xp">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label for="characterRace">Race</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label for="characterAlignment">Alignment</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label for="experiencePoints">Experience Points</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-1 attributes">
-            <div class="attribute-container" data-ng-repeat="(name, ability) in abilities">
-                <label for="{{name}}">{{ability.name}}</label>
-                <input type="text" class="sheet-attribute" title="{{ability.name}} Modifier"
-                       ng-model="ability.mod"
-                       ng-readonly="!mode.editAll">
-                <div class="attribute">
-                    <input id="{{name}}" type="text" ng-model="ability.score" ng-change="updateModifier(name)">
+        <div class="col-md-1 attributes">
+            <div class="outer-section">
+                <div class="attribute-container" data-ng-repeat="(name, ability) in vm.character.abilities">
+                    <label for="{{name}}">{{ability.name}}</label>
+                    <input type="text" class="sheet-attribute" title="{{ability.name}} Modifier"
+                           ng-model="ability.mod"
+                           ng-readonly="!mode.editAll">
+                    <div class="attribute">
+                        <input id="{{name}}" type="text"
+                               ng-model="ability.score"
+                               cs-number=""
+                               ng-change="vm.updateModifier(name)">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-md-3">
             <div class="inspiration-container">
                 <div class="sheet-value">
-                    <input type="checkbox" ng-model="hasInspiration">
+                    <input type="checkbox" id="hasInspiration" ng-model="vm.character.hasInspiration">
                 </div>
                 <div class="sheet-label">
-                    <span>Inspiration</span>
+                    <label for="hasInspiration">Inspiration</label>
                 </div>
             </div>
             <div class="proficiency-container">
                 <div class="sheet-value">
-                    <input type="text" ng-model="proficiencyBonus" ng-change="updateProficiencies()">
+                    <input type="text" id="proficiencyBonus"
+                           ng-model="vm.character.proficiency"
+                           cs-number=""
+                           ng-change="vm.updateProficiencies()">
                 </div>
                 <div class="sheet-label">
-                    <span>Proficiency Bonus</span>
+                    <label for="proficiencyBonus">Proficiency Bonus</label>
                 </div>
             </div>
             <div class="section score-list">
-                <div class="saving-throw" data-ng-repeat="savingThrow in savingThrows">
-                    <input type="checkbox" ng-model="savingThrow.proficient" ng-change="updateSavingThrow(savingThrow)">
-                    <input type="text" title="{{savingThrow.ability.name}} Saving Throw Bonus"
-                           ng-model="savingThrow.score"
+                <div class="saving-throw" data-ng-repeat="(name, ability) in vm.character.abilities">
+                    <input type="checkbox" ng-model="ability.proficient"
+                           ng-change="vm.updateSavingThrow(ability)">
+                    <input type="text" title="{{ability.name}} Saving Throw Bonus"
+                           ng-model="ability.saveScore"
                            ng-readonly="!mode.editAll">
-                    <span>{{savingThrow.ability.name}}</span>
+                    <span>{{ability.name}}</span>
                 </div>
                 <div class="sheet-label">
                     <span>Saving Throws</span>
                 </div>
             </div>
             <div class="section score-list">
-                <div class="skill" data-ng-repeat="skill in skills">
-                    <input type="checkbox" ng-model="skill.proficient" ng-change="updateSkillBonus(skill)">
+                <div class="skill" data-ng-repeat="skill in vm.character.skills">
+                    <input type="checkbox" ng-model="skill.proficient" ng-change="vm.updateSkillBonus(skill)">
                     <input type="text" title="{{skill.name}} Bonus"
                            ng-model="skill.score"
                            ng-readonly="!mode.editAll">
@@ -72,7 +133,109 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="outer-section">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="ac-container">
+                            <span>{{vm.character.ac}}</span>
+                            <span>Armor Class</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box-container">
+                            <span>{{vm.character.initiative}}</span>
+                            <span>Initiative</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box-container">
+                            <span>{{vm.character.speed}}</span>
+                            <span>Speed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box-top">
+                            Hit Point Maximum: <span>{{vm.character.maxHP}}</span>
+                            <span>{{vm.character.hp}}</span>
+                            Current Hit Points
+                        </div>
+                        <div class="box-bottom">
+                            <span>{{vm.character.tempHP}}</span>
+                            Temporary Hit Points
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="box-container">
+                            Total <span>{{vm.character.hitDice}}</span>
+                            <span>{{vm.character.hitDiceUsed}}</span>
+                            Hit Dice
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="box-container">
+                            Successes <!-- Counting Directive -->
+                            Failures <!-- Counting Directive -->
+                            Death Saves
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <!-- Weapons List -->
+                <!-- Notes Area -->
+                <div class="sheet-label">
+                    <span>Attacks &amp; Spellcasting</span>
+                </div>
+            </div>
+            <div class="section">
+                <!-- Coinage Sidebar -->
+                <!-- Equipment List -->
+                <div class="sheet-label">
+                    <span>Equipment</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="outer-section personality">
+                <div class="box-top">
+                    <textarea ng-model="vm.character.personalityTraits"></textarea>
+                    <div class="sheet-label">
+                        <span>Personality Traits</span>
+                    </div>
+                </div>
+                <div class="box-middle">
+                    <textarea ng-model="vm.character.personalityIdeals"></textarea>
+                    <div class="sheet-label">
+                        <span>Ideals</span>
+                    </div>
+                </div>
+                <div class="box-middle">
+                    <textarea ng-model="vm.character.personalityBonds"></textarea>
+                    <div class="sheet-label">
+                        <span>Bonds</span>
+                    </div>
+                </div>
+                <div class="box-bottom">
+                    <textarea ng-model="vm.character.personalityFlaws"></textarea>
+                    <div class="sheet-label">
+                        <span>Flaws</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section features">
+                <textarea ng-model="vm.character.features"></textarea>
+                <div class="sheet-label">
+                    <span>Features &amp; Traits</span>
+                </div>
+            </div>
+        </div>
     </div>
+    </form>
 </div>
 <script type="application/javascript" src="js/vendor/angular/angular.min.js"></script>
 <script type="application/javascript" src="js/app.js"></script>

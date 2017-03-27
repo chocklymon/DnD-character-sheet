@@ -2,48 +2,26 @@
  * Created by coakley on 5/9/16.
  */
 angular.module('CharSheet', [])
-    .controller('Main', ['$scope', function($scope) {
-        // Functions
-        var getAbilityModifier = function(score) {
-            if (score) {
-                return Math.floor(score / 2 - 5);
+    .directive('csNumber', [function() {
+        // Force the model value to be a number
+        function parseNumber(value) {
+            if (value) {
+                return value*1;
             } else {
-                return '';
+                return 0;
+            }
+        }
+
+        return {
+            restrict: 'AC',
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModelCtrl) {
+                ngModelCtrl.$parsers.push(parseNumber);
             }
         };
-        var calculateSavingThrowScore = function(savingThrow) {
-            var score = savingThrow.ability.mod*1;
-            if (savingThrow.proficient) {
-                score += $scope.proficiencyBonus*1;
-            }
-            return score;
-        };
-        var calculateSkillScore = function(skill) {
-            var score = abilities[skill.ability].mod*1;
-            if (skill.proficient) {
-                score += $scope.proficiencyBonus*1;
-            }
-            return score;
-        };
-        var updateSkillsForAbility = function(abilityKey) {
-            angular.forEach(skills, function(skill) {
-                if (skill.ability == abilityKey) {
-                    skill.score = calculateSkillScore(skill);
-                }
-            });
-        };
-        var updateProficiencies = function() {
-            angular.forEach(skills, function(skill) {
-                if (skill.proficient) {
-                    skill.score = calculateSkillScore(skill);
-                }
-            });
-            angular.forEach(savingThrows, function(savingThrow) {
-                if (savingThrow.proficient) {
-                    savingThrow.score = calculateSavingThrowScore(savingThrow);
-                }
-            });
-        };
+    }])
+    .controller('Main', [function() {
+        var vm = this;
 
         // Abilities
         var abilities = {
@@ -66,7 +44,6 @@ angular.module('CharSheet', [])
                 name: 'Charisma'
             }
         };
-        var savingThrows = {};
         var skills = [
             {
                 name: 'Acrobatics',
@@ -142,47 +119,86 @@ angular.module('CharSheet', [])
             }
         ];
 
-        angular.forEach(abilities, function(ability, name) {
-            savingThrows[name] = {
-                ability: ability,
-                proficient: false
-            };
-        });
+
+        vm.character = {
+            hasInspiration: false,
+            proficiency: 2,
+            abilities: abilities,
+            skills: skills
+        };
 
 
         // Bind variables to the scope
-        $scope.proficiencyBonus = 0;
-        $scope.mode = {
+        vm.mode = {
             editAll: false
         };
-        $scope.abilities = abilities;
-        $scope.savingThrows = savingThrows;
-        $scope.skills = skills;
 
         // Scope functions
-        $scope.updateProficiencies = updateProficiencies;
-        $scope.updateSavingThrow = function(savingThrow) {
-            if ('mod' in savingThrow.ability) {
-                savingThrow.score = calculateSavingThrowScore(savingThrow);
+        vm.updateProficiencies = updateProficiencies;
+        vm.updateSavingThrow = function(ability) {
+            if ('mod' in ability) {
+                ability.saveScore = calculateSavingThrowScore(ability);
             }
         };
-        $scope.updateSkillBonus = function(skill) {
+        vm.updateSkillBonus = function(skill) {
             if ('mod' in abilities[skill.ability]) {
                 skill.score = calculateSkillScore(skill);
             }
         };
-        $scope.updateModifier = function(abilityKey) {
+        vm.updateModifier = function(abilityKey) {
             // Get the ability
             var ability = abilities[abilityKey];
 
             // Save the previous modifier, if there is one
-            var previousModifier = ('mod' in ability) ? ability.mod : null;
+            var previousModifier = ('mod' in ability) ? ability.mod : 0;
 
             // Update the ability modifier and the saving throw if needed
             ability.mod = getAbilityModifier(ability.score);
-            if (previousModifier != ability.mod) {
-                savingThrows[abilityKey].score = calculateSavingThrowScore(savingThrows[abilityKey]);
+            if (previousModifier !== ability.mod) {
+                ability.saveScore = calculateSavingThrowScore(ability);
                 updateSkillsForAbility(abilityKey);
             }
         };
+
+        // Functions
+        function getAbilityModifier(score) {
+            if (score) {
+                return Math.floor(score / 2 - 5);
+            } else {
+                return -5;
+            }
+        }
+        function calculateSavingThrowScore(ability) {
+            var score = getAbilityModifier(ability.score);
+            if (ability.proficient) {
+                score += vm.character.proficiency;
+            }
+            return score;
+        }
+        function calculateSkillScore(skill) {
+            var score = abilities[skill.ability].mod;
+            if (skill.proficient) {
+                score += vm.character.proficiency;
+            }
+            return score;
+        }
+        function updateSkillsForAbility(abilityKey) {
+            angular.forEach(skills, function(skill) {
+                if (skill.ability === abilityKey) {
+                    skill.score = calculateSkillScore(skill);
+                }
+            });
+        }
+        function updateProficiencies() {
+            angular.forEach(skills, function(skill) {
+                if (skill.proficient) {
+                    skill.score = calculateSkillScore(skill);
+                }
+            });
+            angular.forEach(abilities, function(ability) {
+                if (ability.proficient) {
+                    ability.saveScore = calculateSavingThrowScore(ability);
+                }
+            });
+        }
     }]);
