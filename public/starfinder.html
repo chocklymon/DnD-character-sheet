@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="CharSheet">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Starfinder Character Sheet</title>
+    <link rel="stylesheet" type="text/css" href="js/vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/sheet.css">
+</head>
+<body>
+<div class="container character-sheet starfinder" data-ng-controller="Starfinder as vm">
+    <form class="form-horizontal" name="vm.characterForm" ng-submit="vm.save()">
+    <div class="row">
+        <div class="col-xs-12 text-right">
+            <h2>
+                Character Sheet
+                <img class="right" src="http://ninjadivision.com/wp-content/uploads/2017/03/SF-LOGO-FLAT-800x.jpg" alt="" width="200"/><!-- TODO -->
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-xs-3">
+                    <h3>Character Name</h3>
+                </div>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control attribute-underline" ng-model="vm.character.name"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <input type="text" id="sf-class" class="form-control attribute-underline" ng-model="vm.character.class"/>
+                    <label for="sf-class" class="label-under">Class/Level</label>
+                </div>
+                <div class="col-xs-3">
+                    <input type="text" id="sf-race" class="form-control attribute-underline"  ng-model="vm.character.race"/>
+                    <label for="sf-race" class="label-under">Race</label>
+                </div>
+                <div class="col-xs-3">
+                    <input type="text" id="sf-theme" class="form-control attribute-underline"  ng-model="vm.character.theme"/>
+                    <label for="sf-theme" class="label-under">Theme</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <input type="text" id="sf-size" class="form-control attribute-underline"  ng-model="vm.character.size"/>
+                    <label for="sf-size" class="label-under">Size</label>
+                </div>
+                <div class="col-xs-2">
+                    <input type="text" id="sf-speed" class="form-control attribute-underline"  ng-model="vm.character.baseSpeed"/>
+                    <label for="sf-speed" class="label-under">Speed</label>
+                </div>
+                <div class="col-xs-1">
+                    <input type="text" id="sf-gender" class="form-control attribute-underline"  ng-model="vm.character.gender"/>
+                    <label for="sf-gender" class="label-under">Gender</label>
+                </div>
+                <div class="col-xs-7">
+                    <input type="text" id="sf-homeworld" class="form-control attribute-underline"  ng-model="vm.character.homeworld"/>
+                    <label for="sf-homeworld" class="label-under">Homeworld</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <input type="text" id="sf-alignment" class="form-control attribute-underline"  ng-model="vm.character.alignment"/>
+                    <label for="sf-alignment" class="label-under">Alignment</label>
+                </div>
+                <div class="col-xs-5">
+                    <input type="text" id="sf-deity" class="form-control attribute-underline"  ng-model="vm.character.deity"/>
+                    <label for="sf-deity" class="label-under">Deity</label>
+                </div>
+                <div class="col-xs-5">
+                    <input type="text" id="sf-player" class="form-control attribute-underline"  ng-model="vm.character.player"/>
+                    <label for="sf-player" class="label-under">Player</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h3><label for="sf-description">Description</label></h3>
+            <textarea id="sf-description" class="form-control" ng-model="vm.character.description"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="section boxed-section">
+                <h3>Ability Scores</h3>
+                <div class="row text-center">
+                    <div class="col-xs-2 col-xs-offset-3">
+                        <span class="cs-label">Score</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span class="cs-label">Modifier</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span class="cs-label">Upgraded Score</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span class="cs-label">Upgraded Modifier</span>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="(name, ability) in vm.character.abilities">
+                    <div class="col-xs-3">
+                        <span class="abbreviation">{{name}}</span>
+                        <label for="sf-ability-{{name}}" class="label-under">{{ability.name}}</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <input type="text" title="{{ability.name}} Score" id="sf-ability-{{name}}" class="attribute attribute-bold"
+                               ng-model="ability.score"/>
+                    </div>
+                    <div class="col-xs-2">
+                        <span class="attribute attribute-bold">{{ability.score | modifier:true}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="row">
+                    <div class="col-xs-7">
+                        <h3>Skills</h3>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="row">
+                            <div class="col-xs-6 text-right">
+                                <label for="sf-skill-ranks">Skill Ranks Per Level</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input type="text" id="sf-skill-ranks" class="attribute" ng-model="vm.character.skillRanksPerLevel"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="skill in vm.character.skills">
+                    <div class="col-xs-4">
+                        <span ng-show="skill.trainedOnly" class="small">†</span>
+                        <input type="checkbox" title="Class Skill" ng-model="skill.classSkill"/>
+                        <label for="sf-skillranks-{{skill.name}}">
+                            <span>{{skill.name}}</span><span ng-if="skill.armorCheckPenalty">*</span>
+                            <span>({{skill.ability}})</span>
+                        </label>
+                    </div>
+                    <div class="col-xs-8">
+                        <span class="attribute">{{skill.total}}</span>
+                        =
+                        <input type="text" id="sf-skillranks-{{skill.name}}" class="attribute" ng-model="skill.ranks"/>
+                        +
+                        <span class="attribute">{{skill.classBonus}}</span>
+                        +
+                        <span class="attribute">{{vm.character.abilities[skill.ability].score | modifier:true}}</span>
+                        +
+                        <input type="text" title="Misc Skill Modifiers" class="attribute" ng-model="skill.modifiers"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+
+        </div>
+    </div>
+    </form>
+</div>
+<script type="application/javascript" src="js/vendor/angular/angular.min.js"></script>
+<script type="application/javascript" src="js/app.js"></script>
+</body>
+</html>

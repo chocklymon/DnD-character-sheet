@@ -1,3 +1,50 @@
+.starfinder {
+    font-family: eurostile, "Helvetica Neue", Helvetica, Arial, sans-serif
+}
+
+.starfinder .section {
+    border: none;
+}
+.starfinder .boxed-section {
+    border: 1px solid black;
+    border-radius: 0 3px 3px 3px;
+}
+
+.starfinder .attribute {
+    display: inline-block;
+    vertical-align: middle;
+    width: 50px;
+    height: 24px;
+    border: 1px solid black;
+    border-radius: 3px;
+    text-align: center;
+}
+.starfinder .attribute-bold {
+    border-width: 2px;
+}
+
+.starfinder .attribute-underline {
+    border-bottom: 1px solid black;
+}
+
+.starfinder .abbreviation {
+    display: inline-block;
+    width: 50px;
+    height: 20px;
+    text-align: center;
+    background: black;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.starfinder .cs-label, .starfinder label {
+    text-transform: uppercase;
+    font-weight: 300;
+}
+.starfinder .label-under {
+    display: block;
+}
+
 .character-sheet input {
     height: auto;
     vertical-align: middle;

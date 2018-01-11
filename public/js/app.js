@@ -15,8 +15,11 @@ angular.module('CharSheet', [])
             get: getAbilityModifier
         };
     }])
-    .filter('modifier', [function() {
-        return function(input) {
+    .filter('modifier', ['AbilityModifier', function(AbilityModifier) {
+        return function(input, getModifier) {
+            if (getModifier) {
+                input = AbilityModifier.get(input);
+            }
             if (input >= 0) {
                 return '+' + input;
             }
@@ -39,6 +42,84 @@ angular.module('CharSheet', [])
             link: function (scope, element, attrs, ngModelCtrl) {
                 ngModelCtrl.$parsers.push(parseNumber);
             }
+        };
+    }])
+    .controller('Starfinder', ['AbilityModifier', function(AbilityModifier) {
+        var vm = this;
+        var abilities = {
+            str: {
+                name: 'Strength'
+            },
+            dex: {
+                name: 'Dexterity'
+            },
+            con: {
+                name: 'Constitution'
+            },
+            int: {
+                name: 'Intelligence'
+            },
+            wis: {
+                name: 'Wisdom'
+            },
+            cha: {
+                name: 'Charisma'
+            }
+        };
+        var skills = [
+            {
+                name: 'Acrobatics',
+                ability: 'dex',
+                armorCheckPenalty: true,
+                trainedOnly: false
+            },
+            {
+                name: 'Athletics',
+                ability: 'str',
+                armorCheckPenalty: true,
+                trainedOnly: false
+            },
+            {
+                name: 'Bluff',
+                ability: 'cha',
+                armorCheckPenalty: false,
+                trainedOnly: false
+            },
+            {
+                name: 'Computers',
+                ability: 'int',
+                armorCheckPenalty: false,
+                trainedOnly: true
+            },
+            {
+                name: 'Culture',
+                ability: 'int',
+                armorCheckPenalty: false,
+                trainedOnly: true
+            },
+            {
+                name: 'Diplomacy',
+                ability: 'cha',
+                armorCheckPenalty: false,
+                trainedOnly: false
+            },
+            {
+                name: 'Disguise',
+                ability: 'cha',
+                armorCheckPenalty: false,
+                trainedOnly: false
+            },
+            {
+                name: 'Engineering',
+                ability: 'int',
+                armorCheckPenalty: false,
+                trainedOnly: true
+            }
+        ];
+
+        vm.character = {
+            abilities: abilities,
+            skills: skills
         };
     }])
     .controller('DnD5e', ['AbilityModifier', function(AbilityModifier) {
