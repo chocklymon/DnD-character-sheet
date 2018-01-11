@@ -2,6 +2,27 @@
  * Created by coakley on 5/9/16.
  */
 angular.module('CharSheet', [])
+    .factory('AbilityModifier', [function() {
+        function getAbilityModifier(score) {
+            if (score) {
+                return Math.floor(score / 2 - 5);
+            } else {
+                return -5;
+            }
+        }
+
+        return {
+            get: getAbilityModifier
+        };
+    }])
+    .filter('modifier', [function() {
+        return function(input) {
+            if (input >= 0) {
+                return '+' + input;
+            }
+            return input;
+        };
+    }])
     .directive('csNumber', [function() {
         // Force the model value to be a number
         function parseNumber(value) {
@@ -20,7 +41,7 @@ angular.module('CharSheet', [])
             }
         };
     }])
-    .controller('Main', [function() {
+    .controller('DnD5e', ['AbilityModifier', function(AbilityModifier) {
         var vm = this;
 
         // Abilities
@@ -153,7 +174,7 @@ angular.module('CharSheet', [])
             var previousModifier = ('mod' in ability) ? ability.mod : 0;
 
             // Update the ability modifier and the saving throw if needed
-            ability.mod = getAbilityModifier(ability.score);
+            ability.mod = AbilityModifier.get(ability.score);
             if (previousModifier !== ability.mod) {
                 ability.saveScore = calculateSavingThrowScore(ability);
                 updateSkillsForAbility(abilityKey);
@@ -161,15 +182,8 @@ angular.module('CharSheet', [])
         };
 
         // Functions
-        function getAbilityModifier(score) {
-            if (score) {
-                return Math.floor(score / 2 - 5);
-            } else {
-                return -5;
-            }
-        }
         function calculateSavingThrowScore(ability) {
-            var score = getAbilityModifier(ability.score);
+            var score = AbilityModifier.get(ability.score);
             if (ability.proficient) {
                 score += vm.character.proficiency;
             }

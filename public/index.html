@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/sheet.css">
 </head>
 <body>
-<div class="container character-sheet" data-ng-controller="Main as vm">
+<div class="container character-sheet" data-ng-controller="DnD5e as vm">
     <form class="form-horizontal" name="vm.characterForm" ng-submit="vm.save()">
     <div class="row">
         <div class="col-xs-12">
@@ -70,14 +70,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-1 attributes">
+        <div class="col-md-1 abilities">
             <div class="outer-section">
-                <div class="attribute-container" data-ng-repeat="(name, ability) in vm.character.abilities">
+                <div class="ability-container" data-ng-repeat="(name, ability) in vm.character.abilities">
                     <label for="{{name}}">{{ability.name}}</label>
-                    <input type="text" class="sheet-attribute" title="{{ability.name}} Modifier"
-                           ng-model="ability.mod"
-                           ng-readonly="!mode.editAll">
-                    <div class="attribute">
+                    <span class="sheet-ability" title="{{ability.name}} Modifier">{{ability.mod | modifier}}</span>
+                    <div class="ability">
                         <input id="{{name}}" type="text"
                                ng-model="ability.score"
                                cs-number=""
@@ -108,11 +106,10 @@
             </div>
             <div class="section score-list">
                 <div class="saving-throw" data-ng-repeat="(name, ability) in vm.character.abilities">
-                    <input type="checkbox" ng-model="ability.proficient"
-                           ng-change="vm.updateSavingThrow(ability)">
-                    <input type="text" title="{{ability.name}} Saving Throw Bonus"
-                           ng-model="ability.saveScore"
-                           ng-readonly="!mode.editAll">
+                    <input type="checkbox" class=""
+                               ng-model="ability.proficient"
+                               ng-change="vm.updateSavingThrow(ability)">
+                    <span class="attribute" title="{{ability.name}} Saving Throw Bonus">{{ability.saveScore | modifier}}</span>
                     <span>{{ability.name}}</span>
                 </div>
                 <div class="sheet-label">
@@ -122,9 +119,7 @@
             <div class="section score-list">
                 <div class="skill" data-ng-repeat="skill in vm.character.skills">
                     <input type="checkbox" ng-model="skill.proficient" ng-change="vm.updateSkillBonus(skill)">
-                    <input type="text" title="{{skill.name}} Bonus"
-                           ng-model="skill.score"
-                           ng-readonly="!mode.editAll">
+                    <span class="attribute" title="{{skill.name}} Bonus">{{skill.score | modifier}}</span>
                     <span>{{skill.name}}</span>
                     <span class="text-muted">({{skill.ability}})</span>
                 </div>

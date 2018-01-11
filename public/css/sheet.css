@@ -47,6 +47,12 @@
     width: 100%;
 }
 
+.score-list .attribute {
+    display: inline-block;
+    min-width: 21px;
+    text-align: right;
+}
+
 .score-list input {
     font-size: 12px;
     width: 21px;
@@ -69,7 +75,7 @@
     padding: 4px;
 }
 
-.attribute-container {
+.ability-container {
     border: 1px solid #666;
     border-radius: 5px;
     height: 74px;
@@ -78,13 +84,14 @@
     position: relative;
     text-align: center;
 }
-.attribute-container label {
+.ability-container label {
     font-size: 11px;
 }
-.attribute-container input {
+.ability-container input {
     margin-top: 3px;
 }
-.attribute-container .sheet-attribute {
+.ability-container .sheet-ability {
+    display: block;
     font-size: 30px;
     padding: 0;
     text-align: center;
@@ -92,7 +99,7 @@
     margin-top: -6px;
 }
 
-.attribute {
+.ability {
     background-color: white;
     border: 1px solid #666;
     border-radius: 50%;
@@ -106,7 +113,7 @@
     margin-right: auto;
     z-index: 2;
 }
-.attribute input {
+.ability input {
     font-size: 19px;
     margin-top: -5px;
     text-align: center;

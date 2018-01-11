@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 // Mongo + Mongoose
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird'); // Use bluebird for mongoose promises
-mongoose.connect('mongodb://172.20.0.2:27017/dnd-tools'); // TODO
+mongoose.connect('mongodb://localhost:27017/dnd-tools'); // TODO
 require('./models');
 
 var authenticationRoutes = require('./routes/authentication');
